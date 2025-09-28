@@ -1,0 +1,31 @@
+# Environment and secrets
+.env
+
+# Database files
+guard_owl.db
+*.db
+
+# Vector database
+chroma_db/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+venv/
+env/
+.venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
