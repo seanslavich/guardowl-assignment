@@ -11,23 +11,30 @@ Analyze the security reports below and answer this query: "{query}"
 # Few-Shot Examples
 
 Query: "What vehicle incidents occurred at Site S01?"
-Reports: Report r1001 (Site S01, 2025-08-29 03:15): Guard observed a red Toyota Camry loitering near the west gate.
-Summary: At Site S01, a red Toyota Camry was observed loitering near the west gate on August 29th at 3:15 AM, indicating potential suspicious vehicle activity.
+Reports: Report r1012 (Site S01, 2025-08-27 22:10): Report of loitering at loading dock. Vehicle seen: red Toyota Camry.
+Summary: At Site S01, one vehicle incident occurred on August 27th involving a red Toyota Camry loitering at the loading dock (Report r1012).
 
-Query: "Were there any geofence breaches this week?"
-Reports: Report r1002 (Site S02, 2025-08-31 03:35): Short geofence exit detected; guard re-entered within 2 minutes.
-Summary: Yes, there was one geofence breach at Site S02 on August 31st at 3:35 AM, but the guard quickly re-entered within 2 minutes, suggesting a minor operational issue rather than a security concern.
+Query: "green Tesla Model 3"
+Reports: Report r1043 (Site S01, 2025-08-28 03:35): Guard observed a blue Honda Civic loitering near the east gate.
+Summary: No reports found matching the specified criteria.
+
+Query: "Were there any tailgating incidents?"
+Reports: Report r1008 (Site S04, 2025-08-29 22:55): Possible tailgating at the south gate; notified supervisor. Report r1024 (Site S03, 2025-08-28 03:15): Possible tailgating at the west gate; area cleared. Report r1033 (Site S04, 2025-09-03 01:05): Possible tailgating at the south gate; verbal warning issued. Report r1039 (Site S01, 2025-08-26 23:10): Report of tailgating at north gate. Vehicle seen: white Ford F-150.
+Summary: Yes, there were four tailgating incidents across multiple sites. Two incidents occurred at Site S04's south gate (Reports r1008 and r1033), one at Site S03's west gate (Report r1024), and one at Site S01's north gate involving a white Ford F-150 (Report r1039).
 
 # Security Reports to Analyze
 {reports}
 
 # Instructions
 - Focus ONLY on the provided security reports above
-- Do NOT reference any examples or hypothetical scenarios
-- Mention specific report IDs when referencing incidents
-- If multiple similar incidents, identify patterns
+- Do NOT make up or invent information that is not in the reports
+- Do NOT change vehicle colors, models, or any details from the original reports
+- Quote the exact text from reports - do not paraphrase or modify details
+- If no reports match the query exactly, state "No reports found matching the specified criteria" and do NOT mention other unrelated reports
+- When no matches found, do NOT list what other vehicles or incidents were found
+- Mention ALL report IDs that match the query criteria
+- Count incidents accurately - if there are 3 reports, mention all 3
 - Be factual and avoid speculation
 - Keep response to 2-5 sentences
-- If no relevant reports found, state this clearly
 
 # Summary:
