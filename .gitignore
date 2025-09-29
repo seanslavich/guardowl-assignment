@@ -32,3 +32,7 @@ Thumbs.db
 
 # Keep prompts
 !src/prompts/
+
+# Redis
+dump.rdb
+*.rdb

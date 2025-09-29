@@ -4,6 +4,7 @@ from .config import settings
 from .database.sqlite_db import SQLiteDatabase
 from .vector_db.chroma_db import ChromaVectorDatabase
 from .llm.groq_llm import GroqLLM
+from .cache.redis_cache import RedisCache
 from .service import GuardOwlService
 from .models import QueryRequest, QueryResponse
 
@@ -18,7 +19,18 @@ if not settings.groq_api_key:
     raise ValueError("GROQ_API_KEY is required. Please set it in your .env file.")
 
 llm = GroqLLM(settings.groq_api_key)
-service = GuardOwlService(database, vector_db, llm)
+
+# Initialize cache if enabled
+cache = None
+if getattr(settings, 'redis_enabled', False):
+    try:
+        redis_host = getattr(settings, 'redis_host', 'localhost')
+        redis_port = getattr(settings, 'redis_port', 6379)
+        cache = RedisCache(redis_host, redis_port)
+    except Exception as e:
+        print(f"Warning: Redis connection failed: {e}. Running without cache.")
+
+service = GuardOwlService(database, vector_db, llm, cache)
 
 @app.on_event("startup")
 async def startup_event():

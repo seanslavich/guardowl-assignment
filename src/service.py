@@ -1,19 +1,23 @@
 import json
+import hashlib
 from datetime import datetime
 from typing import List, Optional, Dict, Any
 from .database.base import DatabaseInterface
 from .vector_db.base import VectorDatabaseInterface
 from .llm.base import LLMInterface
+from .cache.base import CacheInterface
 from .models import SecurityReport, QueryRequest, QueryResponse
 
 class GuardOwlService:
     def __init__(self, 
                  database: DatabaseInterface,
                  vector_db: VectorDatabaseInterface,
-                 llm: LLMInterface):
+                 llm: LLMInterface,
+                 cache: Optional[CacheInterface] = None):
         self.database = database
         self.vector_db = vector_db
         self.llm = llm
+        self.cache = cache
     
     def load_reports(self, json_file_path: str) -> None:
         """Load reports from JSON file into database and vector store"""
@@ -51,6 +55,17 @@ class GuardOwlService:
     
     def query(self, request: QueryRequest) -> QueryResponse:
         """Process query and return structured response"""
+        # Generate cache key
+        cache_key = f"query:{hashlib.md5(str(request.dict()).encode()).hexdigest()}"
+        
+        # Check cache first
+        if self.cache:
+            cached_result = self.cache.get(cache_key)
+            if cached_result:
+                print(f"Cache HIT for key: {cache_key[:20]}...")
+                return QueryResponse(**cached_result)
+            else:
+                print(f"Cache MISS for key: {cache_key[:20]}...")
         # Parse date range for SQL filtering
         start_date: Optional[datetime] = None
         end_date: Optional[datetime] = None
@@ -117,7 +132,14 @@ class GuardOwlService:
             if report.id in summary:
                 mentioned_sources.append(report.id)
         
-        return QueryResponse(
+        response = QueryResponse(
             answer=summary,
             sources=mentioned_sources
         )
+        
+        # Cache the result
+        if self.cache:
+            self.cache.set(cache_key, response.dict(), ttl=1800)  # 30 min TTL
+            print(f"Cached result for key: {cache_key[:20]}...")
+        
+        return response

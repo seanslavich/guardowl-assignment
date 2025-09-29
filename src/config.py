@@ -16,6 +16,11 @@ class Settings(BaseSettings):
     # Embedding Model
     embedding_model: str = "all-MiniLM-L6-v2"
     
+    # Redis Cache
+    redis_enabled: bool = False
+    redis_host: str = "localhost"
+    redis_port: int = 6379
+    
     model_config = ConfigDict(env_file=".env")
 
 settings = Settings()
