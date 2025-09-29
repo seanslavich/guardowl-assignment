@@ -74,6 +74,9 @@ class GuardOwlService:
                 start_date = datetime.fromisoformat(request.dateRange['start']).replace(tzinfo=None)
             if 'end' in request.dateRange:
                 end_date = datetime.fromisoformat(request.dateRange['end']).replace(tzinfo=None)
+                # If only date provided (no time), make it end of day for inclusive behavior
+                if 'T' not in request.dateRange['end']:
+                    end_date = end_date.replace(hour=23, minute=59, second=59)
         
         relevant_reports: List[SecurityReport] = []
         for report_id in report_ids:

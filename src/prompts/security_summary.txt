@@ -22,7 +22,8 @@ Summary: Yes, there was one geofence breach at Site S02 on August 31st at 3:35 A
 {reports}
 
 # Instructions
-- Focus on security-relevant details (vehicles, incidents, locations, times)
+- Focus ONLY on the provided security reports above
+- Do NOT reference any examples or hypothetical scenarios
 - Mention specific report IDs when referencing incidents
 - If multiple similar incidents, identify patterns
 - Be factual and avoid speculation
