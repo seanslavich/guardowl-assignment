@@ -1,5 +1,6 @@
 from groq import Groq
 from typing import List
+from pathlib import Path
 from .base import LLMInterface
 from ..models import SecurityReport
 
@@ -16,12 +17,12 @@ class GroqLLM(LLMInterface):
             for r in reports
         ])
         
-        prompt = f"""Based on the following security reports, provide a concise 2-5 sentence summary answering this query: "{query}"
-
-Reports:
-{reports_text}
-
-Provide a clear, factual summary focusing on the most relevant information."""
+        # Load prompt template
+        prompt_path = Path(__file__).parent.parent / "prompts" / "security_summary.txt"
+        with open(prompt_path, 'r') as f:
+            prompt_template = f.read()
+        
+        prompt = prompt_template.format(query=query, reports=reports_text)
         
         response = self.client.chat.completions.create(
             model="llama-3.1-8b-instant",

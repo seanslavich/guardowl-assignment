@@ -29,3 +29,6 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Keep prompts
+!src/prompts/

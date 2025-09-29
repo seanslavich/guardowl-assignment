@@ -28,7 +28,7 @@ class GuardOwlService:
             report = SecurityReport(
                 id=report_data['id'],
                 siteId=report_data['siteId'],
-                date=datetime.fromisoformat(report_data['date'].replace('Z', '+00:00')),
+                date=datetime.fromisoformat(report_data['date'].replace('Z', '+00:00')).replace(tzinfo=None),
                 guardId=report_data['guardId'],
                 text=report_data['text']
             )
@@ -71,9 +71,9 @@ class GuardOwlService:
         end_date = None
         if request.dateRange:
             if 'start' in request.dateRange:
-                start_date = datetime.fromisoformat(request.dateRange['start'])
+                start_date = datetime.fromisoformat(request.dateRange['start']).replace(tzinfo=None)
             if 'end' in request.dateRange:
-                end_date = datetime.fromisoformat(request.dateRange['end'])
+                end_date = datetime.fromisoformat(request.dateRange['end']).replace(tzinfo=None)
         
         relevant_reports = []
         for report_id in report_ids:
