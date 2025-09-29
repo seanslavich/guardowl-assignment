@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 
 class VectorDatabaseInterface(ABC):
     @abstractmethod
@@ -7,7 +7,7 @@ class VectorDatabaseInterface(ABC):
         pass
     
     @abstractmethod
-    def search(self, query: str, n_results: int = 5, where: Dict[str, Any] = None) -> Dict[str, Any]:
+    def search(self, query: str, n_results: int = 5, where: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         pass
     
     @abstractmethod

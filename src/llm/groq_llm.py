@@ -31,4 +31,4 @@ class GroqLLM(LLMInterface):
             temperature=0.1
         )
         
-        return response.choices[0].message.content
+        return response.choices[0].message.content or "No summary generated."

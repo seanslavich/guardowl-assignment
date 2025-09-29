@@ -1,3 +1,4 @@
+from typing import Optional
 from fastapi import FastAPI, HTTPException
 from .config import settings
 from .database.sqlite_db import SQLiteDatabase
@@ -13,10 +14,10 @@ database = SQLiteDatabase(settings.sqlite_db_path)
 vector_db = ChromaVectorDatabase(settings.chroma_persist_directory)
 
 # Initialize LLM only if API key is provided
-llm = None
-if settings.groq_api_key:
-    llm = GroqLLM(settings.groq_api_key)
+if not settings.groq_api_key:
+    raise ValueError("GROQ_API_KEY is required. Please set it in your .env file.")
 
+llm = GroqLLM(settings.groq_api_key)
 service = GuardOwlService(database, vector_db, llm)
 
 @app.on_event("startup")
@@ -30,9 +31,6 @@ async def startup_event():
 @app.post("/query", response_model=QueryResponse)
 async def query_reports(request: QueryRequest):
     """Query security reports"""
-    if not llm:
-        raise HTTPException(status_code=500, detail="LLM not configured. Please set GROQ_API_KEY.")
-    
     try:
         return service.query(request)
     except Exception as e:

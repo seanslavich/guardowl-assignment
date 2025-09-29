@@ -1,6 +1,7 @@
 import os
 from typing import Optional
 from pydantic_settings import BaseSettings
+from pydantic import ConfigDict
 
 class Settings(BaseSettings):
     # Database
@@ -15,7 +16,6 @@ class Settings(BaseSettings):
     # Embedding Model
     embedding_model: str = "all-MiniLM-L6-v2"
     
-    class Config:
-        env_file = ".env"
+    model_config = ConfigDict(env_file=".env")
 
 settings = Settings()

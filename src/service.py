@@ -1,6 +1,6 @@
 import json
 from datetime import datetime
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 from .database.base import DatabaseInterface
 from .vector_db.base import VectorDatabaseInterface
 from .llm.base import LLMInterface
@@ -20,9 +20,9 @@ class GuardOwlService:
         with open(json_file_path, 'r') as f:
             reports_data = json.load(f)
         
-        documents = []
-        metadatas = []
-        ids = []
+        documents: List[str] = []
+        metadatas: List[Dict[str, Any]] = []
+        ids: List[str] = []
         
         for report_data in reports_data:
             report = SecurityReport(
@@ -52,7 +52,7 @@ class GuardOwlService:
     def query(self, request: QueryRequest) -> QueryResponse:
         """Process query and return structured response"""
         # Build vector search filters
-        where_filter = {}
+        where_filter: Dict[str, str] = {}
         if request.siteId:
             where_filter['siteId'] = request.siteId
         
@@ -64,18 +64,18 @@ class GuardOwlService:
         )
         
         # Get report IDs from search results
-        report_ids = search_results['ids'][0] if search_results['ids'] else []
+        report_ids: List[str] = search_results['ids'][0] if search_results['ids'] else []
         
         # Fetch full reports from database with additional filters
-        start_date = None
-        end_date = None
+        start_date: Optional[datetime] = None
+        end_date: Optional[datetime] = None
         if request.dateRange:
             if 'start' in request.dateRange:
                 start_date = datetime.fromisoformat(request.dateRange['start']).replace(tzinfo=None)
             if 'end' in request.dateRange:
                 end_date = datetime.fromisoformat(request.dateRange['end']).replace(tzinfo=None)
         
-        relevant_reports = []
+        relevant_reports: List[SecurityReport] = []
         for report_id in report_ids:
             report = self.database.get_report_by_id(report_id)
             if report:

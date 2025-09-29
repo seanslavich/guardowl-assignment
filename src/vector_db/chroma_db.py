@@ -1,5 +1,5 @@
 import chromadb
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Optional, cast
 from .base import VectorDatabaseInterface
 
 class ChromaVectorDatabase(VectorDatabaseInterface):
@@ -10,12 +10,12 @@ class ChromaVectorDatabase(VectorDatabaseInterface):
     def add_documents(self, documents: List[str], metadatas: List[Dict[str, Any]], ids: List[str]) -> None:
         self.collection.add(
             documents=documents,
-            metadatas=metadatas,
+            metadatas=cast(Any, metadatas),  # ChromaDB has complex metadata typing
             ids=ids
         )
     
     def search(self, query: str, n_results: int = 5, where: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
-        return self.collection.query(
+        return self.collection.query(  # type: ignore
             query_texts=[query],
             n_results=n_results,
             where=where
